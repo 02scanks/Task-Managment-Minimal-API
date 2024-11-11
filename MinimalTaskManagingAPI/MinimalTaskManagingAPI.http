@@ -1,6 +1,0 @@
-@MinimalTaskManagingAPI_HostAddress = http://localhost:5190
-
-GET {{MinimalTaskManagingAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

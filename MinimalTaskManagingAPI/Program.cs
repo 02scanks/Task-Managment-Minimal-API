@@ -1,12 +1,15 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinimalTaskManagingAPI.Data;
+using MinimalTaskManagingAPI.Endpoints;
+using MinimalTaskManagingAPI.Interfaces;
+using MinimalTaskManagingAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("taskdb");
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -15,6 +18,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
+
+builder.Services.AddScoped<IPasswordHasher<string>, PasswordHasher<string>>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 var app = builder.Build();
 
@@ -29,6 +36,6 @@ app.UseHttpsRedirection();
 
 
 // endpoints
-
+UserEndpoints.MapEndpoints(app);
 
 app.Run();
